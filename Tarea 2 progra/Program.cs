@@ -1,154 +1,191 @@
 ﻿using System;
 
-class Program
+// Constantes de porcentajes y tipos de empleado (nombres abreviados)
+const double DeduCCSS = 0.0917;   // Deducción de la CCSS
+const double AumO = 0.15;         // Aumento del 15% a empleados operarios
+const double AumT = 0.10;         // Aumento del 10% a empleados técnicos
+const double AumP = 0.05;         // Aumento del 5% a empleados profesionales
+
+const int TipoO = 1;              // Tipo operario
+const int TipoT = 2;              // Tipo técnico
+const int TipoP = 3;              // Tipo profesional
+
+//Cantidad máxima de empleados
+int TAM = 6; 
+
+// Arreglos para almacenar los datos de los empleados
+string[] cedulas = new string[TAM];         // Cédulas
+string[] nombres = new string[TAM];         // Nombres
+int[] tipos = new int[TAM];                 // Tipo de empleado
+double[] horas = new double[TAM];           // Horas trabajadas
+double[] precioHora = new double[TAM];      // Salario por hora
+double[] salarioNeto = new double[TAM];     // Salario neto calculado
+
+// Variables para las estadísticas
+int cantO = 0; // Cantidad por tipo
+int cantT = 0;
+int cantP = 0;
+
+double acumO = 0; // Acumulado de salarios netos por tipo
+double acumT = 0;
+double acumP = 0;     
+
+int indice = 0; // Indica cuántos empleados se han ingresado
+
+void ingresarEmpleado()
 {
-    // Constantes de porcentajes y tipos de empleado
-    const double DEDUCCIONES_CCSS = 0.0917; // Deducción de la CCSS
-    const double AUMENTO_OPERARIO = 0.15; // Aumento del 15% a empleados operarios
-    const double AUMENTO_TECNICO = 0.10; // Aumento del 10% a empleados técnicos
-    const double AUMENTO_PROFESIONAL = 0.05; // Aumento del 5% a empleados profesionales
-    const int TIPO_OPERARIO = 1;
-    const int TIPO_TECNICO = 2;
-    const int TIPO_PROFESIONAL = 3;
-
-    // Variables para estadísticas 
-    static int cantOperarios = 0, cantTecnicos = 0, cantProfesionales = 0; // la cantidad total de cada tipo de empleado
-    static double acumNetoOperarios = 0, acumNetoTecnicos = 0, acumNetoProfesionales = 0; // la suma total de todos los salarios netos 
-
-    static void Main()
+    if (indice >= TAM)
     {
-        int opcion = 0; // Variable para controlar el menú
-
-        // Bucle principal del menú
-        do
-        {
-            Console.WriteLine("\nMenú Principal");
-            Console.WriteLine("1. Ingresar empleado");
-            Console.WriteLine("2. Ver estadísticas finales");
-            Console.WriteLine("3. Salir");
-            Console.Write("Seleccione una opción: ");
-            opcion = int.Parse(Console.ReadLine());
-
-            if (opcion == 1)
-            {
-                IngresarEmpleado(); // Llama al proceso de ingreso de empleado
-            }
-            else if (opcion == 2)
-            {
-                MostrarEstadisticas(); // Muestra las estadísticas finales
-            }
-            else if (opcion == 3)
-            {
-                Console.WriteLine("Gracias por usar el sistema.");
-            }
-            else
-            {
-                Console.WriteLine("Opción inválida. Intente de nuevo.");
-            }
-
-        } while (opcion != 3); // El menú se repite mientras no se elija salir
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("No se pueden ingresar más empleados.");
+        Console.ForegroundColor = ConsoleColor.White;
+        return;
     }
 
-    static void IngresarEmpleado()
+    // Se ingresan los datos del empleado
+    Console.Write("Ingrese número de cédula: ");
+    cedulas[indice] = Console.ReadLine();
+
+    Console.Write("Ingrese nombre del empleado: ");
+    nombres[indice] = Console.ReadLine();
+
+    Console.Write("Ingrese tipo de empleado (1-Operario, 2-Técnico, 3-Profesional): ");
+    tipos[indice] = int.Parse(Console.ReadLine());
+
+    Console.Write("Ingrese cantidad de horas laboradas: ");
+    horas[indice] = double.Parse(Console.ReadLine());
+
+    Console.Write("Ingrese salario por hora: ");
+    precioHora[indice] = double.Parse(Console.ReadLine());
+
+    // Calcula salario ordinario
+    double salarioOrdinario = horas[indice] * precioHora[indice];
+
+    // Calcula aumento según tipo
+    double aumento = 0;
+    if (tipos[indice] == TipoO)
+        aumento = salarioOrdinario * AumO;
+    else if (tipos[indice] == TipoT)
+        aumento = salarioOrdinario * AumT;
+    else if (tipos[indice] == TipoP)
+        aumento = salarioOrdinario * AumP;
+
+    // Calcula salario bruto
+    double salarioBruto = salarioOrdinario + aumento;
+
+    // Calcula deducción CCSS
+    double deduccion = salarioBruto * DeduCCSS;
+
+    // Calcula salario neto
+    salarioNeto[indice] = salarioBruto - deduccion;
+
+    // Muestra los resultados del empleado
+    Console.WriteLine("\nDatos del Empleado");
+    Console.WriteLine($"Cédula: {cedulas[indice]}");
+    Console.WriteLine($"Nombre: {nombres[indice]}");
+    Console.WriteLine($"Tipo Empleado: {tipos[indice]}");
+    Console.WriteLine($"Salario por Hora: {precioHora[indice]}");
+    Console.WriteLine($"Cantidad de Horas: {horas[indice]}");
+    Console.WriteLine($"Salario Ordinario: {salarioOrdinario}");
+    Console.WriteLine($"Aumento: {aumento}");
+    Console.WriteLine($"Salario Bruto: {salarioBruto}");
+    Console.WriteLine($"Deducción CCSS: {deduccion}");
+    Console.WriteLine($"Salario Neto: {salarioNeto[indice]}");
+
+    // Actualiza estadísticas
+    if (tipos[indice] == TipoO) //Si el empleado es operario, se suma 1 a la cantidad de operarios y se acumula su salario, para luego calcular el promedio
     {
-        // Mensajes de entrada
-        string Ma1 = "Ingrese número de cédula: ";
-        string Ma2 = "Ingrese nombre del empleado: ";
-        string Ma3 = "Ingrese tipo de empleado (1-Operario, 2-Técnico, 3-Profesional): ";
-        string Ma4 = "Ingrese cantidad de horas laboradas: ";
-        string Ma5 = "Ingrese salario por hora: ";
-
-        // Entrada de datos del empleado
-        Console.Write(Ma1); // Lectura de la cédula
-        string cedula = Console.ReadLine();
-
-        Console.Write(Ma2); // Lectura del nombre
-        string nombre = Console.ReadLine();
-
-        Console.Write(Ma3); // Lectura del tipo de empleado
-        int tipoEmpleado = int.Parse(Console.ReadLine());
-
-        Console.Write(Ma4); // Lectura de horas
-        double horas = double.Parse(Console.ReadLine());
-
-        Console.Write(Ma5); // Lectura del precio por hora
-        double precioHora = double.Parse(Console.ReadLine());
-
-        // Cálculo del salario ordinario
-        double salarioOrdinario = horas * precioHora;
-
-        // Cálculo del aumento según tipo
-        double aumento = 0;
-        if (tipoEmpleado == TIPO_OPERARIO)
-            aumento = salarioOrdinario * AUMENTO_OPERARIO;
-        else if (tipoEmpleado == TIPO_TECNICO)
-            aumento = salarioOrdinario * AUMENTO_TECNICO;
-        else if (tipoEmpleado == TIPO_PROFESIONAL)
-            aumento = salarioOrdinario * AUMENTO_PROFESIONAL;
-
-        // Cálculo del salario bruto
-        double salarioBruto = salarioOrdinario + aumento;
-
-        // Cálculo de deducción CCSS
-        double deduccion = salarioBruto * DEDUCCIONES_CCSS;
-
-        // Cálculo del salario neto
-        double salarioNeto = salarioBruto - deduccion;
-
-        // Mostrar resultados del empleado
-        Console.WriteLine("\nDatos del Empleado ");
-        Console.WriteLine($"Cédula: {cedula}");
-        Console.WriteLine($"Nombre: {nombre}");
-        Console.WriteLine($"Tipo Empleado: {tipoEmpleado}");
-        Console.WriteLine($"Salario por Hora: {precioHora}");
-        Console.WriteLine($"Cantidad de Horas: {horas}");
-        Console.WriteLine($"Salario Ordinario: {salarioOrdinario}");
-        Console.WriteLine($"Aumento: {aumento}");
-        Console.WriteLine($"Salario Bruto: {salarioBruto}");
-        Console.WriteLine($"Deducción CCSS: {deduccion}");
-        Console.WriteLine($"Salario Neto: {salarioNeto}");
-
-        // Actualizar estadísticas
-        if (tipoEmpleado == TIPO_OPERARIO)
-        {
-            cantOperarios++;
-            acumNetoOperarios += salarioNeto;
-        }
-        else if (tipoEmpleado == TIPO_TECNICO)
-        {
-            cantTecnicos++;
-            acumNetoTecnicos += salarioNeto;
-        }
-        else if (tipoEmpleado == TIPO_PROFESIONAL)
-        {
-            cantProfesionales++;
-            acumNetoProfesionales += salarioNeto;
-        }
+        cantO++;
+        acumO += salarioNeto[indice];
+    }
+    else if (tipos[indice] == TipoT)
+    {
+        cantT++;
+        acumT += salarioNeto[indice];
+    }
+    else if (tipos[indice] == TipoP)
+    {
+        cantP++;
+        acumP += salarioNeto[indice];
     }
 
-    static void MostrarEstadisticas()
-    {
-        string Ma7 = "Estadísticas Finales";
-
-        // Promedio de salarios netos
-        double promedioOperarios = cantOperarios > 0 ? acumNetoOperarios / cantOperarios : 0;
-        double promedioTecnicos = cantTecnicos > 0 ? acumNetoTecnicos / cantTecnicos : 0;
-        double promedioProfesionales = cantProfesionales > 0 ? acumNetoProfesionales / cantProfesionales : 0;
-
-        // Mostrar estadísticas finales
-        Console.WriteLine($"\n{Ma7}");
-        Console.WriteLine($"Cantidad de empleados operarios: {cantOperarios}");
-        Console.WriteLine($"Acumulado de salarios netos para los operarios: {acumNetoOperarios}");
-        Console.WriteLine($"Promedio de salarios netos para los operarios: {promedioOperarios}");
-
-        Console.WriteLine($"Cantidad de empleados técnicos: {cantTecnicos}");
-        Console.WriteLine($"Acumulado de salarios netos para los técnicos: {acumNetoTecnicos}");
-        Console.WriteLine($"Promedio de salarios netos para los técnicos: {promedioTecnicos}");
-
-        Console.WriteLine($"Cantidad de empleados profesionales: {cantProfesionales}");
-        Console.WriteLine($"Acumulado de salarios netos para los profesionales: {acumNetoProfesionales}");
-        Console.WriteLine($"Promedio de salarios netos para los profesionales: {promedioProfesionales}");
-    }
+    // Avanza al siguiente índice
+    indice++;
 }
 
+void mostrarEstadisticas()
+{
+    Console.WriteLine("\nEstadísticas Finales");
 
+    // Calcula promedios 
+    double promO = 0;
+    if (cantO > 0)
+    {
+        promO = acumO / cantO;
+    }
+
+    double promT = 0;
+    if (cantT > 0)
+    {
+        promT = acumT / cantT;
+    }
+
+    double promP = 0;
+    if (cantP > 0)
+    {
+        promP = acumP / cantP;
+    }
+
+    // Muestra resultados
+    Console.WriteLine($"Cantidad de empleados operarios: {cantO}");
+    Console.WriteLine($"Acumulado de salarios netos operarios: {acumO}");
+    Console.WriteLine($"Promedio de salarios netos operarios: {promO}");
+
+    Console.WriteLine($"Cantidad de empleados técnicos: {cantT}");
+    Console.WriteLine($"Acumulado de salarios netos técnicos: {acumT}");
+    Console.WriteLine($"Promedio de salarios netos técnicos: {promT}");
+
+    Console.WriteLine($"Cantidad de empleados profesionales: {cantP}");
+    Console.WriteLine($"Acumulado de salarios netos profesionales: {acumP}");
+    Console.WriteLine($"Promedio de salarios netos profesionales: {promP}");
+}
+
+void menu()
+{
+    int opcion;
+
+    do
+    {
+        // Muestra el menú
+        Console.WriteLine("\nMenú Principal");
+        Console.WriteLine("1. Ingresar empleado");
+        Console.WriteLine("2. Ver estadísticas finales");
+        Console.WriteLine("3. Salir");
+        Console.Write("Seleccione una opción: ");
+        opcion = int.Parse(Console.ReadLine());
+
+        // Ejecuta la opción seleccionada
+        switch (opcion)
+        {
+            case 1:
+                ingresarEmpleado();
+                break;
+            case 2:
+                mostrarEstadisticas();
+                break;
+            case 3:
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Gracias por usar el sistema.");
+                break;
+            default:
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Opción inválida.");
+                Console.ForegroundColor = ConsoleColor.White;
+                break;
+        }
+
+    } while (opcion != 3); // Repite hasta que el usuario decida salir
+}
+
+// Inicia el programa
+menu();

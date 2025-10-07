@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Tarea 2 progra")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2a67b9865dff65b7bddb4743e6de02e895b7a7a8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Tarea 2 progra")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Tarea 2 progra")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

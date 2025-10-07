@@ -12,3 +12,4 @@ C:\Users\Mattias Arce Mairena\source\repos\Tarea 2 progra\Tarea 2 progra\obj\Deb
 C:\Users\Mattias Arce Mairena\source\repos\Tarea 2 progra\Tarea 2 progra\obj\Debug\net8.0\Tarea 2 progra.pdb
 C:\Users\Mattias Arce Mairena\source\repos\Tarea 2 progra\Tarea 2 progra\obj\Debug\net8.0\Tarea 2 progra.genruntimeconfig.cache
 C:\Users\Mattias Arce Mairena\source\repos\Tarea 2 progra\Tarea 2 progra\obj\Debug\net8.0\ref\Tarea 2 progra.dll
+C:\Users\Mattias Arce Mairena\source\repos\Tarea 2 progra\Tarea 2 progra\obj\Debug\net8.0\Tarea 2 progra.sourcelink.json
